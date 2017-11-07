@@ -93,10 +93,7 @@ public class MazeCanvas extends Canvas implements MouseListener,KeyListener, Mou
         if (Config.SHOW_CURRENT_TILE)
             pixels[currentTile.x + currentTile.y * w] = Color.red.hashCode();
         image.setRGB(0, 0, w, h, pixels, 0, w);
-        Image i = image.getScaledInstance(image.getWidth() * Config.TARGET_TILE_SIZE, image.getHeight() * Config.TARGET_TILE_SIZE, 0);
-        i = i.getScaledInstance(getWidth(), getHeight(), 0);
-        bs.getDrawGraphics().drawImage(
-                i, 0, 0, null);
+        bs.getDrawGraphics().drawImage(image,0,0,getWidth(),getHeight(),null);
         bs.show();
     }
 
