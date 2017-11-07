@@ -40,18 +40,38 @@ public class SettingsFrame extends JFrame {
         c.gridx = 1;
         add(stepsPerFrame_input, c);
 
+        //Tile Size
+        JLabel tileSize_label = new JLabel("Tile Size:");
+        JTextPane tileSize_input = new JTextPane();
+        tileSize_input.setText(Config.TARGET_TILE_SIZE + "");
+        c.gridx = 0;
+        c.gridy = 1;
+        add(tileSize_label,c);
+        c.gridx = 1;
+        add(tileSize_input,c);
+        c.gridx = 0;
+
+        //Show current tile
+        JLabel currentTile_label = new JLabel("Show current tile:");
+        Checkbox currentTile_input = new Checkbox();
+        currentTile_input.setState(Config.SHOW_CURRENT_TILE);
+        c.gridy = 2;
+        add(currentTile_label,c);
+        c.gridx = 1;
+        add(currentTile_input,c);
+
         c.gridx = 0;
         //Color Mode dropdown
         JLabel colorMode_label = new JLabel("Colour Mode:");
         JComboBox<Color_Mode> colorMode_input = new JComboBox<Color_Mode>(Color_Mode.values());
         colorMode_input.setSelectedItem(Config.CURRENT_COLOR_MODE);
-        c.gridy = 1;
+        c.gridy = 4;
         add(colorMode_label, c);
         c.gridx = 1;
         add(colorMode_input, c);
 
         c.gridx = 0;
-        c.gridy = 2;
+        c.gridy = 5;
         c.gridwidth = 2;
         final JPanel[] currentPanel = {setupColorArea()};
         add(currentPanel[0], c);
@@ -64,7 +84,7 @@ public class SettingsFrame extends JFrame {
                     remove(currentPanel[0]);
                     currentPanel[0] = setupColorArea();
                     c.gridx = 0;
-                    c.gridy = 2;
+                    c.gridy = 5;
                     c.gridwidth = 2;
                     add(currentPanel[0], c);
                     revalidate();
@@ -80,13 +100,16 @@ public class SettingsFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     Config.STEPS_PER_FRAME = Integer.parseInt(stepsPerFrame_input.getText());
+                    Config.SHOW_CURRENT_TILE = currentTile_input.getState();
+                    Config.TARGET_TILE_SIZE = Integer.parseInt(tileSize_input.getText());
                     Config.save();
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
+                System.exit(0);
             }
         });
-        c.gridy = 3;
+        c.gridy = 6;
         add(saveButton, c);
         pack();
         setVisible(true);
