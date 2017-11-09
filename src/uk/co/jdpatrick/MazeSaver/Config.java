@@ -84,7 +84,7 @@ public class Config {
 
 
 enum Color_Mode {
-    TWO_COLOR("Two Colour"), RAINBOW("Rainbow"), COLOR_SET("Colour Set");
+    TWO_COLOR("Two Colour"), RAINBOW("Rainbow"), COLOR_SET("Colour Set"),BRANCH("Branch");
 
     private String name;
 

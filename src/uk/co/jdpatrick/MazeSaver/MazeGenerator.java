@@ -18,10 +18,6 @@ public class MazeGenerator {
     private int[][] tiles;
     private int w, h;
 
-    private int i = 0;
-    private int height;
-    private int width;
-
     public int[][] colorMap;
 
 
@@ -42,6 +38,8 @@ public class MazeGenerator {
     private Point currentTile;
     private final Random rand = new Random();
 
+    boolean isBackingUp = false;
+    int currentColor = rand.nextInt();
     public void step() {
         if (mazeStack.isEmpty()) {
             startMaze();
@@ -49,6 +47,10 @@ public class MazeGenerator {
 
         ArrayList<Point> neighbours = getNeighbours(currentTile);
         if (neighbours.isEmpty()) {
+            if(!isBackingUp){
+                currentColor = rand.nextInt();
+            }
+            isBackingUp = true;
             currentTile = mazeStack.pop();
             if(Config.INSTANT_BACKUP)
                 step();
@@ -57,6 +59,7 @@ public class MazeGenerator {
             carve(currentTile, nextTile);
             mazeStack.push(currentTile);
             currentTile = nextTile;
+            isBackingUp = false;
         }
     }
 
@@ -64,19 +67,27 @@ public class MazeGenerator {
         if (to.x > from.x && to.y == from.y) {
             tiles[to.x][to.y] = 1;
             tiles[to.x - 1][to.y] = 1;
+            colorMap[to.x][to.y] = currentColor;
+            colorMap[to.x - 1][to.y] = currentColor;
         }
         if (to.x < from.x && to.y == from.y) {
             tiles[to.x][to.y] = 1;
             tiles[to.x + 1][to.y] = 1;
+            colorMap[to.x][to.y] = currentColor;
+            colorMap[to.x + 1][to.y] = currentColor;
         }
 
         if (to.y > from.y && to.x == from.x) {
             tiles[to.x][to.y] = 1;
             tiles[to.x][to.y - 1] = 1;
+            colorMap[to.x][to.y] = currentColor;
+            colorMap[to.x][to.y - 1] = currentColor;
         }
         if (to.y < from.y && to.x == from.x) {
             tiles[to.x][to.y] = 1;
             tiles[to.x][to.y + 1] = 1;
+            colorMap[to.x][to.y] = currentColor;
+            colorMap[to.x][to.y + 1] = currentColor;
         }
     }
 
@@ -114,7 +125,6 @@ public class MazeGenerator {
     public void startMaze() {
         tiles = new int[w][h];
         mazeStack.clear();
-        i = 0;
         currentTile = new Point(randOdd(w), randOdd(h));
 
         colorMap = new int[w][h];
