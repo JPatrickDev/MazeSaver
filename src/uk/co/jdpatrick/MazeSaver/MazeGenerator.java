@@ -40,6 +40,7 @@ public class MazeGenerator {
 
     boolean isBackingUp = false;
     int currentColor = rand.nextInt();
+
     public void step() {
         if (mazeStack.isEmpty()) {
             startMaze();
@@ -47,12 +48,12 @@ public class MazeGenerator {
 
         ArrayList<Point> neighbours = getNeighbours(currentTile);
         if (neighbours.isEmpty()) {
-            if(!isBackingUp){
+            if (!isBackingUp) {
                 currentColor = rand.nextInt();
             }
             isBackingUp = true;
             currentTile = mazeStack.pop();
-            if(Config.INSTANT_BACKUP)
+            if (Config.INSTANT_BACKUP)
                 step();
         } else {
             Point nextTile = neighbours.get(rand.nextInt(neighbours.size()));
@@ -67,27 +68,35 @@ public class MazeGenerator {
         if (to.x > from.x && to.y == from.y) {
             tiles[to.x][to.y] = 1;
             tiles[to.x - 1][to.y] = 1;
-            colorMap[to.x][to.y] = currentColor;
-            colorMap[to.x - 1][to.y] = currentColor;
+            if (Config.CURRENT_COLOR_MODE == Color_Mode.BRANCH) {
+                colorMap[to.x][to.y] = currentColor;
+                colorMap[to.x - 1][to.y] = currentColor;
+            }
         }
         if (to.x < from.x && to.y == from.y) {
             tiles[to.x][to.y] = 1;
             tiles[to.x + 1][to.y] = 1;
-            colorMap[to.x][to.y] = currentColor;
-            colorMap[to.x + 1][to.y] = currentColor;
+            if (Config.CURRENT_COLOR_MODE == Color_Mode.BRANCH) {
+                colorMap[to.x][to.y] = currentColor;
+                colorMap[to.x + 1][to.y] = currentColor;
+            }
         }
 
         if (to.y > from.y && to.x == from.x) {
             tiles[to.x][to.y] = 1;
             tiles[to.x][to.y - 1] = 1;
-            colorMap[to.x][to.y] = currentColor;
-            colorMap[to.x][to.y - 1] = currentColor;
+            if (Config.CURRENT_COLOR_MODE == Color_Mode.BRANCH) {
+                colorMap[to.x][to.y] = currentColor;
+                colorMap[to.x][to.y - 1] = currentColor;
+            }
         }
         if (to.y < from.y && to.x == from.x) {
             tiles[to.x][to.y] = 1;
             tiles[to.x][to.y + 1] = 1;
-            colorMap[to.x][to.y] = currentColor;
-            colorMap[to.x][to.y + 1] = currentColor;
+            if (Config.CURRENT_COLOR_MODE == Color_Mode.BRANCH) {
+                colorMap[to.x][to.y] = currentColor;
+                colorMap[to.x][to.y + 1] = currentColor;
+            }
         }
     }
 
@@ -128,14 +137,14 @@ public class MazeGenerator {
         currentTile = new Point(randOdd(w), randOdd(h));
 
         colorMap = new int[w][h];
-        if(Config.CURRENT_COLOR_MODE == Color_Mode.RAINBOW) {
+        if (Config.CURRENT_COLOR_MODE == Color_Mode.RAINBOW) {
             for (int x = 0; x != w; x++) {
                 for (int y = 0; y != h; y++) {
                     colorMap[x][y] = rand.nextInt();
                 }
             }
-        }else if(Config.CURRENT_COLOR_MODE == Color_Mode.COLOR_SET){
-            ColorSet i =Config.CURRENT_SET;
+        } else if (Config.CURRENT_COLOR_MODE == Color_Mode.COLOR_SET) {
+            ColorSet i = Config.CURRENT_SET;
             for (int x = 0; x != w; x++) {
                 for (int y = 0; y != h; y++) {
                     colorMap[x][y] = i.getColors()[rand.nextInt(i.getColors().length)].hashCode();
@@ -146,12 +155,12 @@ public class MazeGenerator {
 
 
     public static void main(String[] args) throws Exception {
-        if(args.length == 0){
+        if (args.length == 0) {
             new SettingsFrame();
-        }else{
-            if(args[0].startsWith("/c")){
+        } else {
+            if (args[0].startsWith("/c")) {
                 new SettingsFrame();
-            }else if(args[0].equalsIgnoreCase("/s")){
+            } else if (args[0].equalsIgnoreCase("/s")) {
                 Config.load();
                 MazeFrame f = new MazeFrame();
             }
